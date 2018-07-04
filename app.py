@@ -28,10 +28,11 @@ def makeResponse(req):
     offer_card = parameters.get("cards")
     offer_type = parameters.get("type")
     offer_activity = parameters.get("activities")
-    r = requests.get("")
+    get_url = "http://efc4a1b2.ngrok.io/get/offers/{0}/{1}/{2}/".format(offer_type,offer_card,offer_activity)
+    r = requests.get(get_url)
     json_object = r.json()
     offers = json_object["offer_list"]
-    speech = "The offers found are as as follows {}".format((" ").join(offers))
+    speech = "The offers found are as as follows {}".format(" ".join(offers))
 
     return {
         "speech" : speech,
