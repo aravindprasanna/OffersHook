@@ -23,7 +23,7 @@ def webhook():
 
 
 def makeResponse(req):
-    result = req.get("result")
+    result = req.get("queryResult")
     parameters = result.get("parameters")
     offer_card = parameters.get("cards")
     offer_type = parameters.get("type")
