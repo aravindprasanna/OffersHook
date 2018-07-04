@@ -35,6 +35,7 @@ def makeResponse(req):
     speech = "The offers found are as as follows {}".format(" ".join(offers))
 
     return {
+        "fulfillmentText": speech,
         "speech" : speech,
         "displayText" : speech,
         "source":"dialogflow-offers-webhook"
