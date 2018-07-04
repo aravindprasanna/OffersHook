@@ -28,7 +28,7 @@ def makeResponse(req):
     offer_card = parameters.get("cards")
     offer_type = parameters.get("type")
     offer_activity = parameters.get("activities")
-    get_url = "http://efc4a1b2.ngrok.io/get/offers/{0}/{1}/{2}/".format(offer_type,offer_card,offer_activity)
+    get_url = "http://efc4a1b2.ngrok.io/get/offers/{}/{}/{}/".format(offer_type,offer_card,offer_activity)
     r = requests.get(get_url)
     json_object = r.json()
     offers = json_object["offer_list"]
@@ -39,6 +39,7 @@ def makeResponse(req):
         "displayText" : speech,
         "source":"dialogflow-offers-webhook"
     }
+
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT',5000))
