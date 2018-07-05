@@ -24,6 +24,7 @@ def webhook():
 
 def makeResponse(req):
     result = req.get("queryResult")
+    output_context_name = req.get("outputContexts")[0].get("name")
     parameters = result.get("parameters")
     offer_card = parameters.get("cards")
     offer_type = parameters.get("type")
@@ -32,7 +33,13 @@ def makeResponse(req):
     r = requests.get(get_url)
     json_object = r.json()
     offers = json_object["offer_list"]
-    speech = "The offers found are as as follows {}".format(" ".join(offers))
+    get_offer_url = "http://efc4a1b2.ngrok.io/get/offer/{}/".format(offers[0])
+    r = requests.get(get_offer_url)
+    json_object = r.json()
+    selected_offer = json_object["offer_details"]
+    offer_no = 1
+    #speech = "The offers found are as as follows {}".format(" ".join(offers))
+    speech = selected_offer
 
     return {
         "fulfillmentText" : speech,
@@ -40,8 +47,17 @@ def makeResponse(req):
             {
                 "text":{
                     "text":[
-                        speech
+                        selected_offer
                     ]
+                }
+            }
+        ],
+        "outputContexts": [
+            {
+                "name": output_context_name,
+                "lifespanCount": 2,
+                "parameters": {
+                    "offer_no": offer_no,
                 }
             }
         ]
