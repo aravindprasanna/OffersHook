@@ -24,7 +24,7 @@ def webhook():
 
 def makeResponse(req):
     result = req.get("queryResult")
-    output_context_name = result.get("outputContexts")[0].get("name")
+    #output_context_name = result.get("outputContexts")[0].get("name")
     parameters = result.get("parameters")
     offer_card = parameters.get("cards")
     offer_type = parameters.get("type")
