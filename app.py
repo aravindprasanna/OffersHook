@@ -49,8 +49,14 @@ def makeResponse(req):
             "google": {
                 "expectUserResponse": False,
                 "finalResponse": {
-                    "speechResponse": {
-                        "textToSpeech": selected_offer
+                    "richResponse": {
+                        "items": [
+                            {
+                                "simpleResponse": {
+                                    "textToSpeech": "Goodbye and good luck!"
+                                }
+                            }
+                        ]
                     }
                 }
             }
