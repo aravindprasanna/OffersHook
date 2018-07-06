@@ -51,25 +51,7 @@ def makeResponse(req):
                     ]
                 }
             }
-        ],
-        "speech": "Test 1",
-        "displayText":"Test 1",
-        "payload": {
-            "google": {
-                "expectUserResponse": False,
-                "finalResponse": {
-                    "richResponse": {
-                        "items": [
-                            {
-                                "simpleResponse": {
-                                    "textToSpeech": "Goodbye and good luck!"
-                                }
-                            }
-                        ]
-                    }
-                }
-            }
-        }
+        ]
     }
 
 if __name__ == '__main__':
