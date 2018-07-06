@@ -52,15 +52,6 @@ def makeResponse(req):
                     ]
                 }
             }
-        ],
-        "outputContexts": [
-            {
-                "name": output_context_name,
-                "lifespanCount": 2,
-                "parameters": {
-                    "offer_no": offer_no,
-                }
-            }
         ]
     }
 
