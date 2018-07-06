@@ -46,11 +46,9 @@ def makeResponse(req):
         "speech" : selected_offer,
         "fulfillmentMessages": [
             {
-                "text":{
                     "text":[
                         selected_offer
                     ]
-                }
             }
         ],
         "outputContexts": [
