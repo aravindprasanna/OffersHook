@@ -61,7 +61,21 @@ def makeResponse(req):
                     "offer_no": offer_no,
                 }
             }
-        ]
+        ],
+        "data": {
+            "google": {
+                "expect_user_response": False,
+                "is_ssml": True,
+                "permissions_request": {
+                    "opt_context": "...",
+                    "permissions": [
+                        "NAME",
+                        "DEVICE_COARSE_LOCATION",
+                        "DEVICE_PRECISE_LOCATION"
+                    ]
+                }
+            }
+        }
     }
 
 
