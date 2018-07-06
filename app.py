@@ -46,11 +46,19 @@ def makeResponse(req):
         "speech" : selected_offer,
         "fulfillmentMessages": [
             {
-                "text":{
-                    "text":[
-                        selected_offer
-                    ]
-                }
+                "payload": {
+                    "google": {
+                        "expectUserResponse": True,
+                        "richResponse": {
+                            "items": [
+                                {
+                                    "simpleResponse": {
+                                        "textToSpeech": "this is a simple response"
+                                    }
+                                }
+                            ]
+                        }
+                    }
             }
         ]
     }
