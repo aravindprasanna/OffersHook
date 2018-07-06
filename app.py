@@ -39,7 +39,7 @@ def makeResponse(req):
     selected_offer = json_object["offer_details"]
     offer_no = 1
     speech = "The offers found are as as follows {}".format(" ".join(offers))
-    #speech = selected_offer
+    speech = selected_offer
 
     return {
         "fulfillmentText": speech,
@@ -59,7 +59,7 @@ def makeResponse(req):
                     "items": [
                         {
                             "simpleResponse": {
-                                "textToSpeech": "this is a simple response"
+                                "textToSpeech": speech
                             }
                         }
                     ]
