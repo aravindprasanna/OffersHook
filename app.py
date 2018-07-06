@@ -46,10 +46,11 @@ def makeResponse(req):
         "speech" : selected_offer,
         "fulfillmentMessages": [
             {
-                    "speech":[
+                "text":{
+                    "text":[
                         selected_offer
-                        ],
-                    "text":selected_offer
+                    ]
+                }
             }
         ],
         "outputContexts": [
@@ -61,24 +62,21 @@ def makeResponse(req):
                 }
             }
         ],
-        "payload": {
+        "data": {
             "google": {
-                "expectUserResponse": True,
-                "is_ssml": False,
-                "richResponse": {
-                    "items": [
-                        {
-                            "simpleResponse": {
-                                "textToSpeech": speech,
-                                "displayText":speech
-                            }
-                        }
+                "expect_user_response": False,
+                "is_ssml": True,
+                "permissions_request": {
+                    "opt_context": "...",
+                    "permissions": [
+                        "NAME",
+                        "DEVICE_COARSE_LOCATION",
+                        "DEVICE_PRECISE_LOCATION"
                     ]
                 }
             }
         }
     }
-
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT',5000))
