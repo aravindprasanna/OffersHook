@@ -60,9 +60,9 @@ def makeResponse(req):
                 }
             }
         ],
-        "data": {
+        "payload": {
             "google": {
-                "expect_user_response": False,
+                "expectUserResponse": False,
                 "is_ssml": False,
                 "richResponse": {
                     "items": [
