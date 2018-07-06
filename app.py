@@ -49,6 +49,16 @@ def makeResponse(req):
                     "text": [
                         selected_offer
                     ]
+                },
+                "data": {
+                    "google": {
+                        "expectUserResponse": False,
+                        "final_response": {
+                            "speech_response": {
+                                "text_to_speech": selected_offer
+                            }
+                        }
+                    }
                 }
             }
             ],
