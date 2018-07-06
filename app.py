@@ -42,7 +42,7 @@ def makeResponse(req):
     speech = selected_offer
 
     return {
-        "fulfillmentText" : speech,
+        "fulfillmentText" : "Test1",
         "fulfillmentMessages": [
             {
                 "text": {
@@ -52,8 +52,8 @@ def makeResponse(req):
                 }
             }
         ],
-        "speech" : selected_offer,
-        "displayText":selected_offer,
+        "speech" : "Test 1",
+        "displayText":"Test 1",
         "payload": {
             "google": {
                 "expectUserResponse": False,
