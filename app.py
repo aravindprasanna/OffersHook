@@ -43,28 +43,9 @@ def makeResponse(req):
 
     return {
         "fulfillmentText" : speech,
-        "fulfillmentMessages": [
-            {
-                "text": {
-                    "text": [
-                        selected_offer
-                    ]
-                },
-                "data": {
-                    "google": {
-                        "expectUserResponse": False,
-                        "final_response": {
-                            "speech_response": {
-                                "text_to_speech": selected_offer
-                            }
-                        }
-                    }
-                }
-            }
-            ],
         "speech" : selected_offer,
         "displayText":selected_offer,
-        "data": {
+        "payload": {
             "google": {
                 "expectUserResponse": False,
                 "final_response": {
