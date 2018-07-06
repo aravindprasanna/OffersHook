@@ -59,6 +59,11 @@ def makeResponse(req):
                             ]
                         }
                     }
+                },
+                "text": {
+                    "text": [
+                        selected_offer
+                    ]
                 }
             }
         ]
