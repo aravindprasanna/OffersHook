@@ -29,11 +29,11 @@ def makeResponse(req):
     offer_card = parameters.get("cards")
     offer_type = parameters.get("type")
     offer_activity = parameters.get("activities")
-    get_url = "http://efc4a1b2.ngrok.io/get/offers/{}/{}/{}/".format(offer_type,offer_card,offer_activity)
+    get_url = "http://a408503e.ngrok.io/get/offers/{}/{}/{}/".format(offer_type,offer_card,offer_activity)
     r = requests.get(get_url)
     json_object = r.json()
     offers = json_object["offer_list"]
-    get_offer_url = "http://efc4a1b2.ngrok.io/get/offer/{}/".format(offers[0])
+    get_offer_url = "http://a408503e.ngrok.io/get/offer/{}/".format(offers[0])
     r = requests.get(get_offer_url)
     json_object = r.json()
     selected_offer = json_object["offer_details"]
