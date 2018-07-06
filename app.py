@@ -46,7 +46,9 @@ def makeResponse(req):
         "speech" : selected_offer,
         "fulfillmentMessages": [
             {
-                    "speech":selected_offer,
+                    "speech":[
+                        selected_offer
+                        ],
                     "text":selected_offer
             }
         ],
@@ -61,23 +63,16 @@ def makeResponse(req):
         ],
         "payload": {
             "google": {
-                "expectUserResponse": False,
+                "expectUserResponse": True,
                 "is_ssml": False,
                 "richResponse": {
                     "items": [
                         {
                             "simpleResponse": {
-                                "textToSpeech": speech
+                                "textToSpeech": speech,
+                                "displayText":speech
                             }
                         }
-                    ]
-                },
-                "permissions_request": {
-                    "opt_context": "...",
-                    "permissions": [
-                        "NAME",
-                        "DEVICE_COARSE_LOCATION",
-                        "DEVICE_PRECISE_LOCATION"
                     ]
                 }
             }
