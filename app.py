@@ -63,7 +63,16 @@ def makeResponse(req):
         "data": {
             "google": {
                 "expect_user_response": False,
-                "is_ssml": True,
+                "is_ssml": False,
+                "richResponse": {
+                    "items": [
+                        {
+                            "simpleResponse": {
+                                "textToSpeech": speech
+                            }
+                        }
+                    ]
+                },
                 "permissions_request": {
                     "opt_context": "...",
                     "permissions": [
