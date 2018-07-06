@@ -64,16 +64,8 @@ def makeResponse(req):
         ],
         "data": {
             "google": {
-                "expect_user_response": False,
-                "is_ssml": True,
-                "permissions_request": {
-                    "opt_context": "...",
-                    "permissions": [
-                        "NAME",
-                        "DEVICE_COARSE_LOCATION",
-                        "DEVICE_PRECISE_LOCATION"
-                    ]
-                }
+                "expect_user_response": True,
+                "is_ssml": False
             }
         }
     }
