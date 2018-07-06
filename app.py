@@ -61,13 +61,7 @@ def makeResponse(req):
                     "offer_no": offer_no,
                 }
             }
-        ],
-        "data": {
-            "google": {
-                "expect_user_response": True,
-                "is_ssml": False
-            }
-        }
+        ]
     }
 
 if __name__ == '__main__':
