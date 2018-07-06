@@ -47,7 +47,7 @@ def makeResponse(req):
             {
                 "text": {
                     "text": [
-                        speech
+                        "Test 1"
                     ]
                 }
             }
