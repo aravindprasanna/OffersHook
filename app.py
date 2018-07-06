@@ -43,6 +43,15 @@ def makeResponse(req):
 
     return {
         "fulfillmentText" : speech,
+        "fulfillmentMessages": [
+            {
+                "text": {
+                    "text": [
+                        selected_offer
+                    ]
+                }
+            }
+            ],
         "speech" : selected_offer,
         "displayText":selected_offer,
         "data": {
