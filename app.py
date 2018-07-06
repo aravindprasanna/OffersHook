@@ -38,21 +38,21 @@ def makeResponse(req):
     json_object = r.json()
     selected_offer = json_object["offer_details"]
     offer_no = 1
-    #speech = "The offers found are as as follows {}".format(" ".join(offers))
-    speech = selected_offer
+    speech = "The offers found are as as follows {}".format(" ".join(offers))
+    #speech = selected_offer
 
     return {
-        "fulfillmentText" : "Test1",
+        "fulfillmentText": speech,
         "fulfillmentMessages": [
             {
                 "text": {
                     "text": [
-                        "Test 1"
+                        speech
                     ]
                 }
             }
         ],
-        "speech" : "Test 1",
+        "speech": "Test 1",
         "displayText":"Test 1",
         "payload": {
             "google": {
