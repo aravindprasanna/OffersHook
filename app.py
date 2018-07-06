@@ -48,9 +48,9 @@ def makeResponse(req):
         "payload": {
             "google": {
                 "expectUserResponse": False,
-                "final_response": {
-                    "speech_response": {
-                        "text_to_speech": selected_offer
+                "finalResponse": {
+                    "speechResponse": {
+                        "textToSpeech": selected_offer
                     }
                 }
             }
