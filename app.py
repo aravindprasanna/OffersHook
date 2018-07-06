@@ -59,6 +59,7 @@ def makeResponse(req):
                             ]
                         }
                     }
+                }
             }
         ]
     }
