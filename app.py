@@ -51,7 +51,21 @@ def makeResponse(req):
                     ]
                 }
             }
-        ]
+        ],
+        "payload": {
+            "google": {
+                "expectUserResponse": True,
+                "richResponse": {
+                    "items": [
+                        {
+                            "simpleResponse": {
+                                "textToSpeech": "this is a simple response"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
     }
 
 if __name__ == '__main__':
