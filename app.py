@@ -25,21 +25,41 @@ def webhook():
 def makeResponse(req):
     result = req.get("queryResult")
     #output_context_name = result.get("outputContexts")[0].get("name")
-    parameters = result.get("parameters")
-    offer_card = parameters.get("cards")
-    offer_type = parameters.get("type")
-    offer_activity = parameters.get("activities")
-    get_url = "http://a408503e.ngrok.io/get/offers/{}/{}/{}/".format(offer_type,offer_card,offer_activity)
-    r = requests.get(get_url)
-    json_object = r.json()
-    offers = json_object["offer_list"]
-    get_offer_url = "http://a408503e.ngrok.io/get/offer/{}/".format(offers[0])
-    r = requests.get(get_offer_url)
-    json_object = r.json()
-    selected_offer = json_object["offer_details"]
-    offer_no = 1
-    speech = "The offers found are as as follows {}".format(" ".join(offers))
-    speech = selected_offer
+    action = result.get("action")
+    if action == "OffersByType":
+        parameters = result.get("parameters")
+        offer_type = parameters.get("type")
+        get_url = "http://a408503e.ngrok.io/get/offers/{}/".format(offer_type)
+        r = requests.get(get_url)
+        json_object = r.json()
+        offers = json_object["offer_list"]
+        no_of_offers = len(offers)
+        speech = ""
+        if no_of_offers == 1:
+            get_offer_url = "http://a408503e.ngrok.io/get/offer/{}/".format(offers[0])
+            r = requests.get(get_offer_url)
+            json_object = r.json()
+            selected_offer = json_object["offer_details"]
+            speech = selected_offer
+        else:
+            speech = '''I have found {} offers. I can help you refine the search further.
+            Would you like me to refine the search?'''
+    else:
+        parameters = result.get("parameters")
+        offer_card = parameters.get("cards")
+        offer_type = parameters.get("type")
+        offer_activity = parameters.get("activities")
+        get_url = "http://a408503e.ngrok.io/get/offers/{}/{}/{}/".format(offer_type,offer_card,offer_activity)
+        r = requests.get(get_url)
+        json_object = r.json()
+        offers = json_object["offer_list"]
+        get_offer_url = "http://a408503e.ngrok.io/get/offer/{}/".format(offers[0])
+        r = requests.get(get_offer_url)
+        json_object = r.json()
+        selected_offer = json_object["offer_details"]
+        offer_no = 1
+        speech = "The offers found are as as follows {}".format(" ".join(offers))
+        speech = selected_offer
 
     return {
         "fulfillmentText": speech,
