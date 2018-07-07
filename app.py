@@ -27,6 +27,10 @@ def makeResponse(req):
     #output_context_name = result.get("outputContexts")[0].get("name")
     action = result.get("action")
     if action == "OffersByType":
+        output_contexts = result.get("outputContexts")
+        context_name = output_contexts.get("name")
+        lifespan_count = output_contexts.get("lifespanCount")
+        output_parameters = output_contexts.get("parameters")
         parameters = result.get("parameters")
         offer_type = parameters.get("type")
         get_url = "http://a408503e.ngrok.io/get/offers/{}/".format(offer_type)
@@ -34,6 +38,7 @@ def makeResponse(req):
         json_object = r.json()
         offers = json_object["offer_list"]
         no_of_offers = len(offers)
+        output_parameters["offer_no"] = no_of_offers
         speech = ""
         if no_of_offers == 1:
             get_offer_url = "http://a408503e.ngrok.io/get/offer/{}/".format(offers[0])
@@ -43,7 +48,42 @@ def makeResponse(req):
             speech = selected_offer
         else:
             speech = '''I have found {} offers. I can help you refine the search further.
-            Would you like me to refine the search?'''
+            Would you like me to refine the search?'''.format(no_of_offers)
+
+        json_res = {
+            "fulfillmentText": speech,
+            "fulfillmentMessages": [
+                {
+                    "text": {
+                        "text": [
+                            speech
+                        ]
+                    }
+                }
+            ],
+            "payload": {
+                "google": {
+                    "expectUserResponse": True,
+                    "richResponse": {
+                        "items": [
+                            {
+                                "simpleResponse": {
+                                    "textToSpeech": speech
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "outputContexts":[
+                {
+                    "name": context_name,
+                    "lifespanCount": lifespan_count,
+                    "parameters": output_parameters
+                }
+            ]
+        }
+
     else:
         parameters = result.get("parameters")
         offer_card = parameters.get("cards")
@@ -60,8 +100,7 @@ def makeResponse(req):
         offer_no = 1
         speech = "The offers found are as as follows {}".format(" ".join(offers))
         speech = selected_offer
-
-    return {
+        json_res = {
         "fulfillmentText": speech,
         "fulfillmentMessages": [
             {
@@ -86,7 +125,9 @@ def makeResponse(req):
                 }
             }
         }
-    }
+        }
+
+    return json_res
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT',5000))
