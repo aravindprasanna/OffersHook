@@ -26,14 +26,14 @@ def makeResponse(req):
     result = req.get("queryResult")
     #output_context_name = result.get("outputContexts")[0].get("name")
     action = result.get("action")
+    output_contexts = result.get("outputContexts")
     if action == "OffersByType":
-        output_contexts = result.get("outputContexts")
-        context_name = output_contexts.get("name")
-        lifespan_count = output_contexts.get("lifespanCount")
-        output_parameters = output_contexts.get("parameters")
+        context_name = output_contexts[0].get("name")
+        lifespan_count = output_contexts[0].get("lifespanCount")
+        output_parameters = output_contexts[0].get("parameters")
         parameters = result.get("parameters")
         offer_type = parameters.get("type")
-        get_url = "http://a408503e.ngrok.io/get/offers/{}/".format(offer_type)
+        get_url = "http://d7dafd75.ngrok.io/get/offers/{}/".format(offer_type)
         r = requests.get(get_url)
         json_object = r.json()
         offers = json_object["offer_list"]
@@ -41,7 +41,7 @@ def makeResponse(req):
         output_parameters["offer_no"] = no_of_offers
         speech = ""
         if no_of_offers == 1:
-            get_offer_url = "http://a408503e.ngrok.io/get/offer/{}/".format(offers[0])
+            get_offer_url = "http://d7dafd75.ngrok.io/get/offer/{}/".format(offers[0])
             r = requests.get(get_offer_url)
             json_object = r.json()
             selected_offer = json_object["offer_details"]
@@ -89,11 +89,11 @@ def makeResponse(req):
         offer_card = parameters.get("cards")
         offer_type = parameters.get("type")
         offer_activity = parameters.get("activities")
-        get_url = "http://a408503e.ngrok.io/get/offers/{}/{}/{}/".format(offer_type,offer_card,offer_activity)
+        get_url = "http://d7dafd75.ngrok.io/get/offers/{}/{}/{}/".format(offer_type,offer_card,offer_activity)
         r = requests.get(get_url)
         json_object = r.json()
         offers = json_object["offer_list"]
-        get_offer_url = "http://a408503e.ngrok.io/get/offer/{}/".format(offers[0])
+        get_offer_url = "http://d7dafd75.ngrok.io/get/offer/{}/".format(offers[0])
         r = requests.get(get_offer_url)
         json_object = r.json()
         selected_offer = json_object["offer_details"]
