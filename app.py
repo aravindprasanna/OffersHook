@@ -13,6 +13,9 @@ url_domain = "http://d7dafd75.ngrok.io/"
 FOUND_X_OFFERS = "I found {} offers. Would you like me to refine the search?"
 FOUND_SPEC_OFFER = ''' Here is the offer. {} . You can get the next offer by saying "Next". 
 '''
+CARD_PROMPT = ''' OK. What type of card do you hold? For example - Gold/ Signature / Platinum / Prepaid/ Debit etc .
+You can find it printed on your plastic.
+'''
 
 
 @app.route('/webhook',methods=['POST'])
@@ -30,6 +33,8 @@ def webhook():
         res = get_offer(req)
     elif action == "NextOffer":
         res = get_offer(req)
+    elif action == "FetchOffersGen-Yes":
+        res = get_yes_response(req)
 
     res = json.dumps(res,indent=4)
     r = make_response(res)
@@ -37,6 +42,37 @@ def webhook():
 
     return r
 
+
+def get_yes_response(req_json):
+    session = req_json.get("session")
+    #offer_type = req_json["queryResult"]["parameters"]["offer_type"]
+    output_contexts = req_json["queryResult"].get("outputContexts")
+    offers_list = []
+    offer_index = 0
+    offer_type = ""
+    context_name = session + "/contexts/offer_context"
+    for context_item in output_contexts:
+        if context_item.get("name") == context_name:
+            offers_list = context_item["parameters"]["offer_list"]
+            offer_index = int(context_item["parameters"]["offer_index"])
+            offer_type = context_item["parameters"]["offer_type"]
+
+    context_lifespan = 5
+    offer_activities = ""
+    offer_card = ""
+
+    speech = CARD_PROMPT
+
+    resp = build_response_json(speech,
+                               context_name,
+                               context_lifespan,
+                               offer_type,
+                               offers_list,
+                               offer_index,
+                               offer_activities,
+                               offer_card)
+
+    return resp
 
 def get_offer(req_json):
     session = req_json.get("session")
@@ -103,7 +139,7 @@ def get_offers(req_json):
                                             offer_activities,
                                             offer_card
                                             )
-
+    print("Card", json_response)
     return json_response
 
 
