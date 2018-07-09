@@ -35,6 +35,8 @@ def webhook():
         res = get_offer(req)
     elif action == "FetchOffersGen-Yes":
         res = get_yes_response(req)
+    elif action == "FetchOffersGen-Yes-CardRefinement":
+        res = get_offers_card(req)
 
     res = json.dumps(res,indent=4)
     r = make_response(res)
@@ -42,6 +44,41 @@ def webhook():
 
     return r
 
+
+def get_offers_card(req_json):
+    session = req_json.get("session")
+    offer_card = req_json["queryResult"]["parameters"]["offer_card"]
+    output_contexts = req_json["queryResult"].get("outputContexts")
+    offers_list = []
+    offer_index = 0
+    offer_type = ""
+    context_name = session + "/contexts/offer_context"
+    for context_item in output_contexts:
+        if context_item.get("name") == context_name:
+            offers_list = context_item["parameters"]["offer_list"]
+            offer_index = int(context_item["parameters"]["offer_index"])
+            offer_type = context_item["parameters"]["offer_type"]
+
+    api_name = "get/offers/{0}/{1}/all".format(offer_type,offer_card)
+    response_json = call_offers_voice(url_domain + api_name)
+    offers_list = response_json["offer_list"]
+    no_of_offers = len(offers_list)
+    context_lifespan = 5
+    offer_index = -1
+    offer_activities = ""
+
+    speech = FOUND_X_OFFERS.format(no_of_offers)
+    json_response = build_response_json(speech,
+                                        context_name,
+                                        context_lifespan,
+                                        offer_type,
+                                        offers_list,
+                                        offer_index,
+                                        offer_activities,
+                                        offer_card
+                                        )
+    print("Card", json_response)
+    return json_response
 
 def get_yes_response(req_json):
     session = req_json.get("session")
@@ -121,7 +158,6 @@ def get_offers(req_json):
     api_name = "get/offers/{0}/all/all".format(offer_type)
     response_json = call_offers_voice(url_domain + api_name)
     offers_list = response_json["offer_list"]
-    offer_index = -1
     no_of_offers = len(offers_list)
     context_name = session + "/contexts/offer_context"
     context_lifespan = 5
