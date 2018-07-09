@@ -37,6 +37,8 @@ def webhook():
         res = get_yes_response(req)
     elif action == "FetchOffersGen-Yes-CardRefinement":
         res = get_offers_card(req)
+    elif action == "FetchOffersGen-Yes-CardRefinement-No":
+        res = get_offer(req)
 
     res = json.dumps(res,indent=4)
     r = make_response(res)
@@ -120,11 +122,15 @@ def get_offer(req_json):
     offers_list = []
     offer_index = 0
     offer_type = ""
+    offer_activities = ""
+    offer_card = ""
     for context_item in output_contexts:
         if context_item.get("name") == context_name:
             offers_list = context_item["parameters"]["offer_list"]
             offer_index = int(context_item["parameters"]["offer_index"])
             offer_type = context_item["parameters"]["offer_type"]
+            offer_card = context_item["parameters"].get("offer_card","")
+            offer_activities = context_item["parameters"].get("offer_activities","")
 
     selected_offer = offers_list[offer_index+1]
 
@@ -135,8 +141,7 @@ def get_offer(req_json):
 
     context_lifespan = 5
     offer_index += 1
-    offer_activities = ""
-    offer_card = ""
+
 
     #offer_details = selected_offer["offer_details"]
     print(offer_details)
