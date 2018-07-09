@@ -16,6 +16,8 @@ FOUND_SPEC_OFFER = ''' Here is the offer. {} . You can get the next offer by say
 CARD_PROMPT = ''' OK. What type of card do you hold? For example - Gold/ Signature / Platinum / Prepaid/ Debit etc .
 You can find it printed on your plastic.
 '''
+ACTIVITY_PROMPT = ''' OK. What product or service are you scouting for ?
+'''
 
 
 @app.route('/webhook',methods=['POST'])
@@ -34,11 +36,13 @@ def webhook():
     elif action == "NextOffer":
         res = get_offer(req)
     elif action == "FetchOffersGen-Yes":
-        res = get_yes_response(req)
+        res = get_yes_response(req,CARD_PROMPT)
     elif action == "FetchOffersGen-Yes-CardRefinement":
         res = get_offers_card(req)
     elif action == "FetchOffersGen-Yes-CardRefinement-No":
         res = get_offer(req)
+    elif action == "FetchOffersGen-Yes-CardRefinement-Yes":
+        res = get_yes_response(req,ACTIVITY_PROMPT)
 
     res = json.dumps(res,indent=4)
     r = make_response(res)
@@ -82,25 +86,27 @@ def get_offers_card(req_json):
     print("Card", json_response)
     return json_response
 
-def get_yes_response(req_json):
+def get_yes_response(req_json,speech):
     session = req_json.get("session")
     #offer_type = req_json["queryResult"]["parameters"]["offer_type"]
     output_contexts = req_json["queryResult"].get("outputContexts")
     offers_list = []
     offer_index = 0
     offer_type = ""
+    offer_activities = ""
+    offer_card = ""
     context_name = session + "/contexts/offer_context"
     for context_item in output_contexts:
         if context_item.get("name") == context_name:
             offers_list = context_item["parameters"]["offer_list"]
             offer_index = int(context_item["parameters"]["offer_index"])
             offer_type = context_item["parameters"]["offer_type"]
+            offer_card = context_item["parameters"].get("offer_card", "")
+            offer_activities = context_item["parameters"].get("offer_activities", "")
 
     context_lifespan = 5
-    offer_activities = ""
-    offer_card = ""
 
-    speech = CARD_PROMPT
+
 
     resp = build_response_json(speech,
                                context_name,
