@@ -48,7 +48,7 @@ def get_offer(req_json):
     for context_item in output_contexts:
         if context_item.get("name") == context_name:
             offers_list = context_item["parameters"]["offer_list"]
-            offer_index = context_item["parameters"]["offer_index"]
+            offer_index = int(context_item["parameters"]["offer_index"])
             offer_type = context_item["parameters"]["offer_type"]
 
     selected_offer = offers_list[offer_index+1]
