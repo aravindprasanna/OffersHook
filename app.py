@@ -7,14 +7,26 @@ from flask import request
 from flask import make_response
 
 app = Flask(__name__)
+url_domain = "http://d7dafd75.ngrok.io/"
+
+#canned responses
+FOUND_X_OFFERS = "I found {} offers. Would you like me to refine the search?"
 
 
 @app.route('/webhook',methods=['POST'])
 def webhook():
+    res = ""
     req = request.get_json(silent=True,force=True)
     print(json.dumps(req,indent=4))
 
-    res = makeResponse(req)
+    query_result = req.get("queryResult")
+    action = query_result.get("action")
+
+    if action == "FetchOffersGen":
+        res = get_offers(req)
+    elif action == "FetchOffersGen-No":
+        res = get_offer(req)
+
     res = json.dumps(res,indent=4)
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
@@ -22,85 +34,45 @@ def webhook():
     return r
 
 
-def makeResponse(req):
-    result = req.get("queryResult")
-    #output_context_name = result.get("outputContexts")[0].get("name")
-    action = result.get("action")
-    output_contexts = result.get("outputContexts")
-    if action == "OffersByType":
-        context_name = output_contexts[0].get("name")
-        lifespan_count = output_contexts[0].get("lifespanCount")
-        output_parameters = output_contexts[0].get("parameters")
-        parameters = result.get("parameters")
-        offer_type = parameters.get("type")
-        get_url = "http://d7dafd75.ngrok.io/get/offers/{}/".format(offer_type)
-        r = requests.get(get_url)
-        json_object = r.json()
-        offers = json_object["offer_list"]
-        no_of_offers = len(offers)
-        output_parameters["offer_no"] = no_of_offers
-        speech = ""
-        if no_of_offers == 1:
-            get_offer_url = "http://d7dafd75.ngrok.io/get/offer/{}/".format(offers[0])
-            r = requests.get(get_offer_url)
-            json_object = r.json()
-            selected_offer = json_object["offer_details"]
-            speech = selected_offer
-        else:
-            speech = '''I have found {} offers. I can help you refine the search further.
-            Would you like me to refine the search?'''.format(no_of_offers)
+def get_offer(req_json):
+    session = req_json.get("session")
+    offer_type = req_json["queryResult"]["parameters"]["offer_type"]
+    api_name = "get/offers/{0}/all/all".format(offer_type)
+    response_json = call_offers_voice(url_domain + api_name)
 
-        json_res = {
-            "fulfillmentText": speech,
-            "fulfillmentMessages": [
-                {
-                    "text": {
-                        "text": [
-                            speech
-                        ]
-                    }
-                }
-            ],
-            "payload": {
-                "google": {
-                    "expectUserResponse": True,
-                    "richResponse": {
-                        "items": [
-                            {
-                                "simpleResponse": {
-                                    "textToSpeech": speech
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            "outputContexts":[
-                {
-                    "name": context_name,
-                    "lifespanCount": lifespan_count,
-                    "parameters": output_parameters
-                }
-            ]
-        }
+    return response_json
 
-    else:
-        parameters = result.get("parameters")
-        offer_card = parameters.get("cards")
-        offer_type = parameters.get("type")
-        offer_activity = parameters.get("activities")
-        get_url = "http://d7dafd75.ngrok.io/get/offers/{}/{}/{}/".format(offer_type,offer_card,offer_activity)
-        r = requests.get(get_url)
-        json_object = r.json()
-        offers = json_object["offer_list"]
-        get_offer_url = "http://d7dafd75.ngrok.io/get/offer/{}/".format(offers[0])
-        r = requests.get(get_offer_url)
-        json_object = r.json()
-        selected_offer = json_object["offer_details"]
-        offer_no = 1
-        speech = "The offers found are as as follows {}".format(" ".join(offers))
-        speech = selected_offer
-        json_res = {
+def get_offers(req_json):
+    session = req_json.get("session")
+    offer_type = req_json["queryResult"]["parameters"]["offer_type"]
+    api_name = "get/offers/{0}/all/all".format(offer_type)
+    response_json = call_offers_voice(url_domain + api_name)
+    offers_list = response_json["offer_list"]
+    offer_index = -1
+    no_of_offers = len(offers_list)
+    context_name = session + "/contexts/offer_context"
+    context_lifespan = 5
+    offer_index = -1
+    offer_activities = ""
+    offer_card = ""
+
+    speech = FOUND_X_OFFERS.format(no_of_offers)
+    json_response = build_response_json(speech,
+                                            context_name,
+                                            context_lifespan,
+                                            offer_type,
+                                            offers_list,
+                                            offer_index,
+                                            offer_activities,
+                                            offer_card
+                                            )
+
+    return json_response
+
+
+def build_response_json(speech,context_name,context_lifespan,offer_type,offers_list,offer_index,
+                        offer_activities,offer_card):
+    JSON_SPEECH_ONLY = {
         "fulfillmentText": speech,
         "fulfillmentMessages": [
             {
@@ -124,10 +96,33 @@ def makeResponse(req):
                     ]
                 }
             }
-        }
-        }
+        },
+        "outputContexts": [
+            {
+                "name": context_name,
+                "lifespanCount": context_lifespan,
+                "parameters": {
+                    "offer_type": offer_type,
+                    "offer_list": offers_list,
+                    "offer_index": offer_index,
+                    "offer_activities": offer_activities,
+                    "offer_card": offer_card
+                }
+            }
+        ]
+    }
 
-    return json_res
+    return JSON_SPEECH_ONLY
+
+def call_offers_voice(url):
+    print(url)
+    r = requests.get(url)
+    json_object = r.json()
+
+    return json_object
+
+
+
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT',5000))
