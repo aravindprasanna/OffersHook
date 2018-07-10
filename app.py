@@ -7,7 +7,7 @@ from flask import request
 from flask import make_response
 
 app = Flask(__name__)
-url_domain = "http://56328013.ngrok.io"
+url_domain = "http://56328013.ngrok.io/ "
 
 #canned responses
 FOUND_X_OFFERS = "I found {} offers. Would you like me to refine the search?"
