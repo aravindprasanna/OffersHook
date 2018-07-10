@@ -73,7 +73,11 @@ def get_offers_activity(req_json):
 
     api_name = "search/offers/{}/".format(search_parm)
     response_json = call_offers_voice(url_domain + api_name)
-    offers_list = response_json["offer_list"]
+
+    offers_list = []
+    for each_offer in response_json:
+        offers_list.append(each_offer["offer_id"])
+    
     no_of_offers = len(offers_list)
     context_lifespan = 5
     offer_index = -1
