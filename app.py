@@ -13,6 +13,8 @@ url_domain = "http://41372c4d.ngrok.io/"
 FOUND_X_OFFERS = "I found {} offers. Would you like me to refine the search?"
 FOUND_SPEC_OFFER = ''' Here is the offer. {} . You can get the next offer by saying "Next". 
 '''
+FOUND_ACT_OFFER = ''' I found {} offers. Here is the offer {} . You can get the next offer by saying "Next".
+'''
 CARD_PROMPT = ''' OK. What type of card do you hold? For example - Gold/ Signature / Platinum / Prepaid/ Debit etc .
 You can find it printed on your plastic.
 '''
@@ -77,13 +79,13 @@ def get_offers_activity(req_json):
     offers_list = []
     for each_offer in response_json:
         offers_list.append(each_offer["offer_id"])
-    
+
     no_of_offers = len(offers_list)
     context_lifespan = 5
-    offer_index = -1
+    offer_index = 0
     offer_activities = search_parm
 
-    speech = FOUND_X_OFFERS.format(no_of_offers)
+    speech = FOUND_ACT_OFFER.format(no_of_offers,response_json[0]["offer_details"])
     json_response = build_response_json(speech,
                                         context_name,
                                         context_lifespan,
