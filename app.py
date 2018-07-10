@@ -47,6 +47,8 @@ def webhook():
         res = get_yes_response(req,ACTIVITY_PROMPT)
     elif action == "FetchOffersGen-ActivityRefinement":
         res = get_offers_activity(req)
+    elif action == "FetchOffersActivity":
+        res = get_offers_activity(req)
 
     res = json.dumps(res,indent=4)
     r = make_response(res)
