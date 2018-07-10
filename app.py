@@ -57,6 +57,7 @@ def webhook():
     return r
 
 
+
 def get_offers_activity(req_json):
     session = req_json.get("session")
     search_parm = req_json["queryResult"]["parameters"]["any"]
@@ -66,12 +67,13 @@ def get_offers_activity(req_json):
     offer_type = ""
     offer_card = ""
     offer_activities = ""
+
     context_name = session + "/contexts/offer_context"
     for context_item in output_contexts:
         if context_item.get("name") == context_name:
-            offers_list = context_item["parameters"]["offer_list"]
-            offer_index = int(context_item["parameters"]["offer_index"])
-            offer_type = context_item["parameters"]["offer_type"]
+            offers_list = context_item["parameters"].get("offer_list","")
+            offer_index = int(context_item["parameters"].get("offer_index",0))
+            offer_type = context_item["parameters"].get("offer_type","")
             offer_card = context_item["parameters"].get("offer_card", "")
             offer_activities = context_item["parameters"].get("offer_activities", "")
 
