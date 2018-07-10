@@ -7,7 +7,7 @@ from flask import request
 from flask import make_response
 
 app = Flask(__name__)
-url_domain = "http://d7dafd75.ngrok.io/"
+url_domain = "http://56328013.ngrok.io"
 
 #canned responses
 FOUND_X_OFFERS = "I found {} offers. Would you like me to refine the search?"
@@ -16,7 +16,7 @@ FOUND_SPEC_OFFER = ''' Here is the offer. {} . You can get the next offer by say
 CARD_PROMPT = ''' OK. What type of card do you hold? For example - Gold/ Signature / Platinum / Prepaid/ Debit etc .
 You can find it printed on your plastic.
 '''
-ACTIVITY_PROMPT = ''' OK. What product or service are you scouting for ?
+ACTIVITY_PROMPT = ''' OK. What type of activity are you interested in ? Something like shopping perhaps ?
 '''
 
 
